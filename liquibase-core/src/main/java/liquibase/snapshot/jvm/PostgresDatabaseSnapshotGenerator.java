@@ -103,8 +103,12 @@ public class PostgresDatabaseSnapshotGenerator extends JdbcDatabaseSnapshotGener
             Object arrays = keys.getArray();
             if (arrays instanceof Integer[]) {
                 str = StringUtils.join((Integer[])arrays, ",");
+            } else if (arrays instanceof Short[]) {
+                str = StringUtils.join((Short[])arrays, ",");
             } else if (arrays instanceof int[]) {
                 str = StringUtils.join((int[])arrays, ",");
+            } else if (arrays instanceof short[]) {
+                str = StringUtils.join((short[])arrays, ",");
             } else {
                 throw new SQLException("Can't detect type of array " + arrays);
             }
@@ -116,7 +120,7 @@ public class PostgresDatabaseSnapshotGenerator extends JdbcDatabaseSnapshotGener
             }
             StringTokenizer str_token = new StringTokenizer(keys.toString().replace("{", "").replace("}", ""), ",");
             while (str_token.hasMoreTokens()) {
-                Integer column_id = new Integer(str_token.nextToken());
+                Integer column_id = new Integer(str_token.nextToken().replaceAll("\"(\\d+)\"", "$1"));
                 constraint.getColumns().add(columns_map.get(column_id));
             }
         }
